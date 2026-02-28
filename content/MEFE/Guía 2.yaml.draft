@@ -1,5 +1,0 @@
-zk_file: "zk list -m 'title: MEFE' -m 'title: Guía 2' --limit 1 --quiet --format \"'{{path}}'\" --delimiter ' ' $@ --no-input"
-summary: "Guía 2 de MEFE"
-pre_content: '{{< toc title="Lista de ejercicios">}}'
-transformations:
-  title: 'def t(title): return title.replace("MEFE - ", "")'

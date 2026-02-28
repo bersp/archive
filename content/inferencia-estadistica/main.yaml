@@ -1,0 +1,16 @@
+page:
+  title: Inferencia Estadística
+  subtitle: Tecnología Digital — Universidad Torcuato Di Tella
+documents:
+  - title: Test de T-Student
+    description: Presentación de apoyo para introducir los test de hipótesis cuando se tienen pocos datos.
+    filename: documents/test_de_hip_sigma_desconocido.pdf
+  - title: Trabajo Práctico 2 - Parte 1
+    description: Introducción a la generación de distribuciones mediante simulaciones numéricas.
+    filename: documents/TP2_parte_1.pdf
+  - title: Trabajo Práctico 2 - Parte 2
+    description: El promedio como variable aleatoria y ley de los grandes números.
+    filename: documents/TP2_parte_2.pdf
+  - title: Trabajo Práctico 2 - Parte 3
+    description: Teorema central del límite.
+    filename: documents/TP3_parte_3.pdf

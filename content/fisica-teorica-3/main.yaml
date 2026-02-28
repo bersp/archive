@@ -1,0 +1,13 @@
+page:
+  title: Física Teórica 3
+  subtitle: Lic. en Ciencias Físicas — Universidad de Buenos Aires
+documents:
+  - title: Gas de bosones
+    description: Presentación de apoyo para introducir el tratamiento estadístico de un gas de bosones.
+    filename: documents/gas_de_bosones.pdf
+  - title: Grupos de renormalización
+    description: Presentación de apoyo para introducir grupos de renormalización discreta en dos dimensiones y la aproximación de Migdal Kadanoff.
+    filename: documents/RG_Migdal_Kadanoff.pdf
+  - title: Paramagnetismo de Pauli
+    description: Presentación de apoyo para introducir y resolver el problema del paramagnetismo de Pauli.
+    filename: documents/paramagnetimo_de_pauli.pdf

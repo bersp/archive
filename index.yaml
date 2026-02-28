@@ -1,0 +1,7 @@
+site:
+  title: ARCHIVE
+  language: es
+  empty_state:
+    tag: Sin archivos
+    title: No hay PDFs publicados todavía
+    description: Este espacio todavía no tiene presentaciones disponibles para descarga.
