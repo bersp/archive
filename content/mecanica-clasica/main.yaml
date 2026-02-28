@@ -8,3 +8,6 @@ documents:
   - title: Transformaciones canónicas
     description: Presentación de apoyo para introducir las transformaciones canónicas.
     filename: documents/transformaciones_canonicas.pdf
+  - title: Ángulos de Euler
+    description: Presentación de apoyo para introducir los ángulos de euler.
+    filename: documents/angulos_de_euler.pdf

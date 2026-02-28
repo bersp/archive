@@ -5,9 +5,9 @@ documents:
   - title: Condiciones de contorno en la cuerda ideal
     description: Presentación de apoyo para la clase de introducción a la ecuación de ondas en la cuerda ideal.
     filename: documents/cc_en_cuerdas.pdf
-  - title: Difracción de dos rendijas
-    description: Presentación sobre el problema de las dos rendijas.
-    filename: documents/difraccion.pdf
+  - title: Difracción de una y dos rendijas
+    description: Presentación para introducir difracción en una y dos rendijas.
+    filename: documents/difraccion_1_y_2_rendijas.pdf
   - title: Dos masitas y muchos resortes
     description: Presentación sobre el problema de las hornallas de resortes.
     filename: documents/dos_masitas_muchos_resortes.pdf
@@ -23,3 +23,6 @@ documents:
   - title: Polarización
     description: Presentación de apoyo para introducir los posibles estados de polarización de la luz.
     filename: documents/polarizacion.pdf
+  - title: Anillos de Newton
+    description: Presentación de apoyo para introducir el inferferómetro que genera anillos de Newton.
+    filename: documents/anillos_de_newton.pdf
