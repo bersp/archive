@@ -19,10 +19,10 @@ PLACEHOLDER_PATTERN = re.compile(r"\{\{[A-Z_]+\}\}")
 SITE_TITLE = "ARCHIVE"
 SITE_LANGUAGE = "es"
 DOCUMENT_TYPE_ICON_TUPLES = [
-    ("pdf", "fa fa-file-pdf-o"),
-    ("link", "fa fa-link"),
-    ("python", "fa fa-file-code-o"),
-    ("python-notebook", "fa fa-book"),
+    ("file", "fa-solid fa-file"),
+    ("pdf", "fa-solid fa-file-pdf"),
+    ("link", "fa-solid fa-link"),
+    ("python", "fa-brands fa-python"),
 ]
 DOCUMENT_TYPE_ORDER = [document_type for document_type, _ in DOCUMENT_TYPE_ICON_TUPLES]
 DOCUMENT_TYPE_ICON_BY_NAME = dict(DOCUMENT_TYPE_ICON_TUPLES)
@@ -198,7 +198,7 @@ def render_document_card(document: dict, index: int) -> str:
         "              <span class=\"card-expand-icons\">\n"
         f"{chr(10).join(indicator_icons)}\n"
         "              </span>\n"
-        "              <i class=\"fa fa-angle-down card-expand-chevron\" aria-hidden=\"true\"></i>\n"
+        "              <i class=\"fa-solid fa-chevron-down card-expand-chevron\" aria-hidden=\"true\"></i>\n"
         "            </div>\n"
         "          </label>\n"
         "          <div class=\"card-attachments\" aria-label=\"Adjuntos disponibles\">\n"
