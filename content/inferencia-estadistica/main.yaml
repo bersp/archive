@@ -6,23 +6,23 @@ documents:
     description: Presentación de apoyo para introducir los test de hipótesis cuando se tienen pocos datos.
     attachments:
       - type: pdf
-        description: Presentación de apoyo para introducir los test de hipótesis cuando se tienen pocos datos.
+        description: Presentación
         path: documents/test_de_hip_sigma_desconocido.pdf
   - title: Trabajo Práctico 2 - Parte 1
     description: Introducción a la generación de distribuciones mediante simulaciones numéricas.
     attachments:
       - type: pdf
-        description: Introducción a la generación de distribuciones mediante simulaciones numéricas.
+        description: Presentación
         path: documents/TP2_parte_1.pdf
   - title: Trabajo Práctico 2 - Parte 2
     description: El promedio como variable aleatoria y ley de los grandes números.
     attachments:
       - type: pdf
-        description: El promedio como variable aleatoria y ley de los grandes números.
+        description: Presentación
         path: documents/TP2_parte_2.pdf
   - title: Trabajo Práctico 2 - Parte 3
     description: Teorema central del límite.
     attachments:
       - type: pdf
-        description: Teorema central del límite.
-        path: documents/TP3_parte_3.pdf
+        description: Presentación
+        path: documents/TP2_parte_3.pdf

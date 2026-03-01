@@ -6,17 +6,17 @@ documents:
     description: Presentación de apoyo para introducir el tratamiento estadístico de un gas de bosones.
     attachments:
       - type: pdf
-        description: Presentación de apoyo para introducir el tratamiento estadístico de un gas de bosones.
+        description: Presentación
         path: documents/gas_de_bosones.pdf
   - title: Grupos de renormalización
     description: Presentación de apoyo para introducir grupos de renormalización discreta en dos dimensiones y la aproximación de Migdal Kadanoff.
     attachments:
       - type: pdf
-        description: Presentación de apoyo para introducir grupos de renormalización discreta en dos dimensiones y la aproximación de Migdal Kadanoff.
+        description: Presentación
         path: documents/RG_Migdal_Kadanoff.pdf
   - title: Paramagnetismo de Pauli
     description: Presentación de apoyo para introducir y resolver el problema del paramagnetismo de Pauli.
     attachments:
       - type: pdf
-        description: Presentación de apoyo para introducir y resolver el problema del paramagnetismo de Pauli.
-        path: documents/paramagnetimo_de_pauli.pdf
+        description: Presentación
+        path: documents/paramagnetismo_de_pauli.pdf
