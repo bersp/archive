@@ -217,7 +217,7 @@ def render_navbar(home_url: str) -> str:
 def render_entry_cards(entries: list[dict]) -> str:
     return "\n\n".join(
         [
-            "        <a class=\"card\" href=\"content/{slug}/index.html\">\n"
+            "        <a class=\"card\" href=\"content/{slug}/\">\n"
             "          <h2 class=\"card-title\">{title}</h2>\n"
             "          <p class=\"card-subtitle\">{subtitle}</p>\n"
             "        </a>".format(
@@ -236,7 +236,7 @@ def render_index_html(site: dict, entries: list[dict]) -> str:
         {
             "LANG": esc(site["language"]),
             "SITE_TITLE": esc(site["title"]),
-            "NAVBAR": render_navbar("index.html"),
+            "NAVBAR": render_navbar("./"),
             "ENTRY_CARDS": render_entry_cards(entries),
         },
     )
@@ -251,7 +251,7 @@ def render_entry_html(site: dict, entry: dict) -> str:
             "SITE_TITLE": esc(site["title"]),
             "ENTRY_TITLE": esc(entry["title"]),
             "ENTRY_SUBTITLE": esc(entry["subtitle"]),
-            "NAVBAR": render_navbar("../../index.html"),
+            "NAVBAR": render_navbar("../../"),
             "DOCUMENT_CARDS": "\n\n".join(cards),
         },
     )
