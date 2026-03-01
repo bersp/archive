@@ -10,13 +10,24 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parent
-INDEX_YAML_PATH = ROOT / "index.yaml"
 ASSETS_DIR = ROOT / "assets"
 DIST_DIR = ROOT / "dist"
 INDEX_TEMPLATE_PATH = ROOT / "templates" / "index.html"
 ENTRY_TEMPLATE_PATH = ROOT / "templates" / "entry.html"
 NAVBAR_TEMPLATE_PATH = ROOT / "templates" / "partials" / "navbar.html"
 PLACEHOLDER_PATTERN = re.compile(r"\{\{[A-Z_]+\}\}")
+SITE_TITLE = "ARCHIVE"
+SITE_LANGUAGE = "es"
+DOCUMENT_TYPE_ICON_TUPLES = [
+    ("pdf", "fa fa-file-pdf-o"),
+    ("link", "fa fa-link"),
+    ("python", "fa fa-file-code-o"),
+    ("python-notebook", "fa fa-book"),
+]
+DOCUMENT_TYPE_ORDER = [document_type for document_type, _ in DOCUMENT_TYPE_ICON_TUPLES]
+DOCUMENT_TYPE_ICON_BY_NAME = dict(DOCUMENT_TYPE_ICON_TUPLES)
+if len(DOCUMENT_TYPE_ICON_BY_NAME) != len(DOCUMENT_TYPE_ICON_TUPLES):
+    raise ValueError("Duplicate document types in DOCUMENT_TYPE_ICON_TUPLES")
 
 
 def load_yaml(path: Path) -> dict:
@@ -61,36 +72,141 @@ def require_string(mapping: dict, key: str, context: str) -> str:
     return value
 
 
-def normalize_filename(filename: str, context: str) -> str:
-    filename_path = Path(filename)
-    if filename_path.is_absolute() or ".." in filename_path.parts:
-        raise ValueError(f"{context}: invalid filename '{filename}'")
-    return filename_path.as_posix()
+def normalize_local_path(value: str, context: str) -> str:
+    local_path = Path(value)
+    if local_path.is_absolute() or ".." in local_path.parts:
+        raise ValueError(f"{context}: invalid path '{value}'")
+    return local_path.as_posix()
 
 
-def render_empty_card(empty_state: dict) -> str:
-    tag = empty_state.get("tag", "Sin archivos")
-    title = empty_state.get("title", "No hay documentos publicados")
-    description = empty_state.get("description", "Este espacio todavía no tiene archivos disponibles.")
+def parse_attachment(attachment: dict, entry_path: Path, context: str) -> dict:
+    document_type = require_string(attachment, "type", context)
+    if document_type not in DOCUMENT_TYPE_ICON_BY_NAME:
+        allowed = ", ".join(DOCUMENT_TYPE_ORDER)
+        raise ValueError(f"{context}: unsupported type '{document_type}' (allowed: {allowed})")
+
+    description = require_string(attachment, "description", context)
+    has_path = "path" in attachment
+    has_url = "url" in attachment
+    if has_path == has_url:
+        raise ValueError(f"{context}: provide exactly one of 'path' or 'url'")
+
+    if document_type == "link":
+        if not has_url:
+            raise ValueError(f"{context}: type 'link' requires 'url'")
+        href = require_string(attachment, "url", context)
+        return {
+            "type": document_type,
+            "icon_class": DOCUMENT_TYPE_ICON_BY_NAME[document_type],
+            "description": description,
+            "href": href,
+            "download_name": "",
+            "path": "",
+            "source_path": None,
+            "is_external": True,
+        }
+
+    if has_url:
+        raise ValueError(f"{context}: type '{document_type}' cannot use 'url'; use 'path'")
+
+    local_path = normalize_local_path(require_string(attachment, "path", context), context)
+    source_path = entry_path.parent / local_path
+    if not source_path.is_file():
+        raise FileNotFoundError(f"{context}: missing file '{source_path}'")
+
+    return {
+        "type": document_type,
+        "icon_class": DOCUMENT_TYPE_ICON_BY_NAME[document_type],
+        "description": description,
+        "href": local_path,
+        "download_name": Path(local_path).name,
+        "path": local_path,
+        "source_path": source_path,
+        "is_external": False,
+    }
+
+
+def parse_document(document: dict, entry_path: Path, context: str) -> dict:
+    raw_attachments = document.get("attachments")
+    if not isinstance(raw_attachments, list) or not raw_attachments:
+        raise ValueError(f"{context}: missing required non-empty list 'attachments'")
+
+    attachments = []
+    for attachment_index, attachment in enumerate(raw_attachments):
+        if not isinstance(attachment, dict):
+            raise ValueError(f"{context}:attachments[{attachment_index}] must be a mapping")
+        attachment_context = f"{context}:attachments[{attachment_index}]"
+        parsed_attachment = parse_attachment(attachment, entry_path, attachment_context)
+        attachments.append((attachment_index, parsed_attachment))
+
+    attachments.sort(key=lambda indexed_attachment: (DOCUMENT_TYPE_ORDER.index(indexed_attachment[1]["type"]), indexed_attachment[0]))
+    sorted_attachments = [attachment for _, attachment in attachments]
+    first_attachment = sorted_attachments[0]
+
+    fallback_title = first_attachment["href"]
+    if first_attachment["path"]:
+        fallback_title = first_attachment["path"]
+
+    return {
+        "title": str(document.get("title", fallback_title)).strip() or fallback_title,
+        "description": str(document.get("description", "")).strip(),
+        "attachments": sorted_attachments,
+    }
+
+
+def render_document_card(document: dict, index: int) -> str:
+    toggle_id = f"card-toggle-{index}"
+    indicator_icons = []
+    indicator_types = set()
+    attachment_items = []
+    for attachment in document["attachments"]:
+        if attachment["type"] not in indicator_types:
+            indicator_types.add(attachment["type"])
+            indicator_icons.append(
+                "                <i class=\"{icon_class} card-expand-attachment-icon\" aria-hidden=\"true\"></i>".format(
+                    icon_class=esc(attachment["icon_class"])
+                )
+            )
+        download_attr = f" download=\"{esc(attachment['download_name'])}\"" if attachment["download_name"] else ""
+        external_attrs = " target=\"_blank\" rel=\"noopener noreferrer\"" if attachment["is_external"] else ""
+        attachment_items.append(
+            "            <a class=\"card-attachment\" href=\"{href}\"{download_attr}{external_attrs}>"
+            "<i class=\"{icon_class}\" aria-hidden=\"true\"></i>"
+            "<span>{description}</span>"
+            "</a>".format(
+                href=esc(attachment["href"]),
+                download_attr=download_attr,
+                external_attrs=external_attrs,
+                icon_class=esc(attachment["icon_class"]),
+                description=esc(attachment["description"]),
+            )
+        )
+
+    subtitle_html = ""
+    if document["description"]:
+        subtitle_html = f"              <p class=\"card-subtitle\">{esc(document['description'])}</p>\n"
+
     return (
-        "        <div class=\"card card-empty\">\n"
-        f"          <p class=\"file-tag\">{esc(tag)}</p>\n"
-        f"          <h2 class=\"card-title\">{esc(title)}</h2>\n"
-        f"          <p class=\"card-subtitle\">{esc(description)}</p>\n"
-        "        </div>"
-    )
-
-
-def render_document_card(document: dict) -> str:
-    filename = document["filename"]
-    extension = Path(filename).suffix.lstrip(".").upper() or "FILE"
-    download_name = Path(filename).name
-    return (
-        f"        <a class=\"card\" href=\"{esc(filename)}\" download=\"{esc(download_name)}\">\n"
-        f"          <p class=\"file-tag\">{esc(extension)}</p>\n"
-        f"          <h2 class=\"card-title\">{esc(document['title'])}</h2>\n"
-        f"          <p class=\"card-subtitle\">{esc(document['description'])}</p>\n"
-        "        </a>"
+        "        <article class=\"card card-document\">\n"
+        f"          <input id=\"{esc(toggle_id)}\" class=\"card-toggle\" type=\"checkbox\" />\n"
+        f"          <label class=\"card-summary\" for=\"{esc(toggle_id)}\">\n"
+        "            <div class=\"card-summary-main\">\n"
+        f"              <h2 class=\"card-title\">{esc(document['title'])}</h2>\n"
+        f"{subtitle_html}"
+        "            </div>\n"
+        "            <div class=\"card-expand-indicator\" aria-hidden=\"true\">\n"
+        "              <span class=\"card-expand-icons\">\n"
+        f"{chr(10).join(indicator_icons)}\n"
+        "              </span>\n"
+        "              <i class=\"fa fa-angle-down card-expand-chevron\" aria-hidden=\"true\"></i>\n"
+        "            </div>\n"
+        "          </label>\n"
+        "          <div class=\"card-attachments\" aria-label=\"Adjuntos disponibles\">\n"
+        "            <div class=\"card-attachments-inner\">\n"
+        f"{chr(10).join(attachment_items)}\n"
+        "            </div>\n"
+        "          </div>\n"
+        "        </article>"
     )
 
 
@@ -127,7 +243,7 @@ def render_index_html(site: dict, entries: list[dict]) -> str:
 
 
 def render_entry_html(site: dict, entry: dict) -> str:
-    cards = [render_document_card(doc) for doc in entry["documents"]] or [render_empty_card(site["empty_state"])]
+    cards = [render_document_card(doc, index) for index, doc in enumerate(entry["documents"])]
     return render_template(
         ENTRY_TEMPLATE_PATH,
         {
@@ -161,30 +277,13 @@ def load_entry(path: Path) -> dict:
     if not isinstance(raw_documents, list):
         raise ValueError(f"{path}: 'documents' must be a list")
 
-    seen_filenames = set()
     documents = []
     for index, document in enumerate(raw_documents):
         if not isinstance(document, dict):
             raise ValueError(f"{path}:documents[{index}] must be a mapping")
 
         doc_context = f"{path}:documents[{index}]"
-        filename = normalize_filename(require_string(document, "filename", doc_context), doc_context)
-        if filename in seen_filenames:
-            raise ValueError(f"{doc_context}: duplicate filename '{filename}'")
-        seen_filenames.add(filename)
-
-        source_path = path.parent / filename
-        if not source_path.is_file():
-            raise FileNotFoundError(f"{doc_context}: missing file '{source_path}'")
-
-        documents.append(
-            {
-                "filename": filename,
-                "title": str(document.get("title", filename)).strip() or filename,
-                "description": str(document.get("description", "")).strip(),
-                "source_path": source_path,
-            }
-        )
+        documents.append(parse_document(document, path, doc_context))
 
     return {
         "source_path": path,
@@ -195,40 +294,19 @@ def load_entry(path: Path) -> dict:
     }
 
 
-def resolve_entry_paths(index_data: dict) -> list[Path]:
-    configured_entries = index_data.get("entry")
-    if configured_entries is None:
-        return sorted((ROOT / "content").glob("*/main.yaml"))
-
-    if not isinstance(configured_entries, list):
-        raise ValueError("index.yaml: 'entry' must be a list when provided")
-    if not configured_entries:
-        return []
-
-    paths = []
-    for index, configured_entry in enumerate(configured_entries):
-        if not isinstance(configured_entry, str) or not configured_entry.strip():
-            raise ValueError(f"index.yaml:entry[{index}] must be a non-empty string path")
-        paths.append(ROOT / configured_entry)
-    return paths
+def resolve_entry_paths() -> list[Path]:
+    return sorted((ROOT / "content").glob("*/main.yaml"))
 
 
-def load_site_and_entries(index_data: dict) -> tuple[dict, list[dict]]:
-    site_config = index_data.get("site")
-    if not isinstance(site_config, dict):
-        raise ValueError("index.yaml: missing required mapping 'site'")
-
+def load_site_and_entries() -> tuple[dict, list[dict]]:
     site = {
-        "title": str(site_config.get("title", "ARCHIVE")).strip() or "ARCHIVE",
-        "language": str(site_config.get("language", "es")).strip() or "es",
-        "empty_state": site_config.get("empty_state", {}),
+        "title": SITE_TITLE,
+        "language": SITE_LANGUAGE,
     }
-    if not isinstance(site["empty_state"], dict):
-        raise ValueError("index.yaml: 'site.empty_state' must be a mapping")
 
     entries = []
     seen_slugs: dict[str, Path] = {}
-    for entry_path in resolve_entry_paths(index_data):
+    for entry_path in resolve_entry_paths():
         entry = load_entry(entry_path)
         slug = entry["slug"]
         if slug in seen_slugs:
@@ -254,14 +332,21 @@ def write_site(site: dict, entries: list[dict]) -> None:
         output_dir.mkdir(parents=True, exist_ok=True)
         (output_dir / "index.html").write_text(render_entry_html(site, entry), encoding="utf-8")
 
+        copied_paths = set()
         for document in entry["documents"]:
-            destination_path = output_dir / document["filename"]
-            destination_path.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(document["source_path"], destination_path)
+            for attachment in document["attachments"]:
+                if not attachment["path"]:
+                    continue
+                if attachment["path"] in copied_paths:
+                    continue
+                copied_paths.add(attachment["path"])
+                destination_path = output_dir / attachment["path"]
+                destination_path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(attachment["source_path"], destination_path)
 
 
 def main() -> None:
-    site, entries = load_site_and_entries(load_yaml(INDEX_YAML_PATH))
+    site, entries = load_site_and_entries()
     write_site(site, entries)
 
 

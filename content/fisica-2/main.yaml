@@ -4,25 +4,49 @@ page:
 documents:
   - title: Condiciones de contorno en la cuerda ideal
     description: Presentación de apoyo para la clase de introducción a la ecuación de ondas en la cuerda ideal.
-    filename: documents/cc_en_cuerdas.pdf
+    attachments:
+      - type: pdf
+        description: Presentación de apoyo para la clase de introducción a la ecuación de ondas en la cuerda ideal.
+        path: documents/cc_en_cuerdas.pdf
   - title: Difracción de una y dos rendijas
     description: Presentación para introducir difracción en una y dos rendijas.
-    filename: documents/difraccion_1_y_2_rendijas.pdf
+    attachments:
+      - type: pdf
+        description: Presentación para introducir difracción en una y dos rendijas.
+        path: documents/difraccion_1_y_2_rendijas.pdf
   - title: Dos masitas y muchos resortes
     description: Presentación sobre el problema de las hornallas de resortes.
-    filename: documents/dos_masitas_muchos_resortes.pdf
+    attachments:
+      - type: pdf
+        description: Presentación sobre el problema de las hornallas de resortes.
+        path: documents/dos_masitas_muchos_resortes.pdf
   - title: Breve introducción a la Transformada de Fourier
     description: Presentación de apoyo para introducir brevemente la Transformada de Fourier y sus propiedades más importantes.
-    filename: documents/intro_fourier.pdf
+    attachments:
+      - type: pdf
+        description: Presentación de apoyo para introducir brevemente la Transformada de Fourier y sus propiedades más importantes.
+        path: documents/intro_fourier.pdf
   - title: Ondas propagantes S1-S2-Pared
     description: "Presentación de apoyo para introducir propagación de ondas (Ej: S1-S2-Pared)."
-    filename: documents/ondas_propagantes_pared.pdf
+    attachments:
+      - type: pdf
+        description: "Presentación de apoyo para introducir propagación de ondas (Ej: S1-S2-Pared)."
+        path: documents/ondas_propagantes_pared.pdf
   - title: Ondas propagantes S1-S2-S3
     description: "Presentación de apoyo para introducir propagación de ondas (Ej: S1-S2-S3)."
-    filename: documents/ondas_propagantes_tres_secciones.pdf
+    attachments:
+      - type: pdf
+        description: "Presentación de apoyo para introducir propagación de ondas (Ej: S1-S2-S3)."
+        path: documents/ondas_propagantes_tres_secciones.pdf
   - title: Polarización
     description: Presentación de apoyo para introducir los posibles estados de polarización de la luz.
-    filename: documents/polarizacion.pdf
+    attachments:
+      - type: pdf
+        description: Presentación de apoyo para introducir los posibles estados de polarización de la luz.
+        path: documents/polarizacion.pdf
   - title: Anillos de Newton
     description: Presentación de apoyo para introducir el inferferómetro que genera anillos de Newton.
-    filename: documents/anillos_de_newton.pdf
+    attachments:
+      - type: pdf
+        description: Presentación de apoyo para introducir el inferferómetro que genera anillos de Newton.
+        path: documents/anillos_de_newton.pdf

@@ -4,10 +4,19 @@ page:
 documents:
   - title: La paradoja de los gemelos
     description: Presentación de apoyo para explicar y resolver la paradoja de los gemelos en relatividad especial.
-    filename: documents/paradoja_de_los_gemelos.pdf
+    attachments:
+      - type: pdf
+        description: Presentación de apoyo para explicar y resolver la paradoja de los gemelos en relatividad especial.
+        path: documents/paradoja_de_los_gemelos.pdf
   - title: Transformaciones canónicas
     description: Presentación de apoyo para introducir las transformaciones canónicas.
-    filename: documents/transformaciones_canonicas.pdf
+    attachments:
+      - type: pdf
+        description: Presentación de apoyo para introducir las transformaciones canónicas.
+        path: documents/transformaciones_canonicas.pdf
   - title: Ángulos de Euler
     description: Presentación de apoyo para introducir los ángulos de euler.
-    filename: documents/angulos_de_euler.pdf
+    attachments:
+      - type: pdf
+        description: Presentación de apoyo para introducir los ángulos de euler.
+        path: documents/angulos_de_euler.pdf
