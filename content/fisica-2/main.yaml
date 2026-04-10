@@ -50,3 +50,12 @@ documents:
       - type: pdf
         description: Presentación
         path: documents/anillos_de_newton.pdf
+  - title: Péndulos acoplatos
+    description: Video experimental y colab sobre péndulos acoplados.
+    attachments:
+      - type: link
+        description: Experimento
+        url: https://youtu.be/CguKKl9mX2s?si=OBy4ef083JCqdHR4
+      - type: link
+        description: Colab
+        url: https://colab.research.google.com/drive/1EEqilpaTRM6feg8GDveSYiS9p-jjP2Q2?usp=sharing
