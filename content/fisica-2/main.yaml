@@ -50,12 +50,21 @@ documents:
       - type: pdf
         description: Presentación
         path: documents/anillos_de_newton.pdf
-  - title: Péndulos acoplatos
-    description: Video experimental y colab sobre péndulos acoplados.
+  - title: Péndulos acoplados
+    description: Video y Colab de ejemplo sobre péndulos acoplados.
     attachments:
       - type: link
-        description: Experimento
+        description: Video
         url: https://youtu.be/CguKKl9mX2s?si=OBy4ef083JCqdHR4
       - type: link
         description: Colab
         url: https://colab.research.google.com/drive/1EEqilpaTRM6feg8GDveSYiS9p-jjP2Q2?usp=sharing
+  - title: Notas de clase para ≥2GL, acoplamiento débil y forzado
+    description: Notas para dictar las clases de los problemas de 2 o más grados de libertad. Incluye introducción a desacoplar ecuaciones, formulación matricial del problema, condiciones iniciales, acoplamiento débil y forzado.
+    attachments:
+      - type: pdf
+        description: Primera clase
+        path: documents/g2_intro_2gl.pdf
+      - type: pdf
+        description: Segunda clase
+        path: documents/g2_ci_acc_debil_forzado_2gl.pdf
