@@ -285,6 +285,8 @@ def load_entry(path: Path) -> dict:
         doc_context = f"{path}:documents[{index}]"
         documents.append(parse_document(document, path, doc_context))
 
+    documents.sort(key=lambda doc: doc["title"].casefold())
+
     return {
         "source_path": path,
         "slug": slug,
